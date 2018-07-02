@@ -1,27 +1,10 @@
 package main
 
-import (
-	"fmt"
-	"strconv"
-
-	"github.com/ericmdantas/go-block/blockchain"
-)
-
 func main() {
-	bc := blockchain.NewBlockchain()
+	bc := NewBlockchain()
 
-	bc.AddBlock("wat 1")
-	bc.AddBlock("wat 2")
-	bc.AddBlock("wat 3")
+	defer bc.db.Close()
 
-	for _, block := range bc.Blocks {
-		fmt.Printf("PrevHash: %x\n", block.PrevBlockHash)
-		fmt.Printf("Data: %x\n", block.Data)
-		fmt.Printf("Hash: %x\n", block.Hash)
-		fmt.Println()
-
-		pow := blockchain.NewProofOfWork(block)
-		fmt.Printf("Pow: %s\n", strconv.FormatBool(pow.Validate()))
-		fmt.Println()
-	}
+	cli := CLI{bc}
+	cli.Run()
 }
